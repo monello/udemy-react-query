@@ -8,7 +8,7 @@ const queryClient = new QueryClient();
 
 function App() {
     return (
-        // provide React Query client to App
+        // Provide React Query client to App
         <QueryClientProvider client={queryClient}>
             <div className="App">
                 <h1>Blog Posts</h1>
