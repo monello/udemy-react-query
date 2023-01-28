@@ -18,9 +18,16 @@ export function Posts() {
     // Destructure the "data" ptoperty that gets returned from the useQuery() hook
     // There are many other properties that can be destructured.
     // See: https://react-query-v3.tanstack.com/guides/queries and https://react-query-v3.tanstack.com/reference/useQuery
-    const { data, isLoading } = useQuery("posts", fetchPosts);
+    const { data, isLoading, isError, error } = useQuery("posts", fetchPosts);
 
     if (isLoading) return <div>Loading ...</div>;
+    if (isError)
+        return (
+            <>
+                <h3>Something went wrong. Unable to fetch posts.</h3>
+                <p>{error.toString()}</p>
+            </>
+        );
 
     return (
         <>
