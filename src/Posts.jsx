@@ -18,10 +18,9 @@ export function Posts() {
     // Destructure the "data" ptoperty that gets returned from the useQuery() hook
     // There are many other properties that can be destructured.
     // See: https://react-query-v3.tanstack.com/guides/queries and https://react-query-v3.tanstack.com/reference/useQuery
-    const { data } = useQuery("posts", fetchPosts);
+    const { data, isLoading } = useQuery("posts", fetchPosts);
 
-    // temoporary hack to make component re-render once the data returns from the fetchPosts (Async call)
-    if (!data) return <div />;
+    if (isLoading) return <div>Loading ...</div>;
 
     return (
         <>
