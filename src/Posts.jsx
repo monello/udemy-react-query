@@ -1,5 +1,5 @@
-import { useState } from "react";
-import { useQuery } from "react-query";
+import { useEffect, useState } from "react";
+import { useQuery, useQueryClient } from "react-query";
 
 import { PostDetail } from "./PostDetail";
 const maxPostPage = 10;
@@ -15,6 +15,19 @@ export function Posts() {
     const [currentPage, setCurrentPage] = useState(1);
     const [selectedPost, setSelectedPost] = useState(null);
 
+    const queryClient = useQueryClient();
+
+    // While on a given page, fetch the data for the next page so long (Pre-fetch) and it to cache with
+    // the the query-key that the next page would expect
+    useEffect(() => {
+        if (currentPage < maxPostPage) {
+            const nextPage = currentPage + 1;
+            queryClient.prefetchQuery(["posts", nextPage], () =>
+                fetchPosts(nextPage)
+            );
+        }
+    }, [currentPage, queryClient]);
+
     // Destructure the "data" ptoperty that gets returned from the useQuery() hook
     // There are many other properties that can be destructured.
     // See: https://react-query-v3.tanstack.com/guides/queries and https://react-query-v3.tanstack.com/reference/useQuery
@@ -24,6 +37,9 @@ export function Posts() {
         () => fetchPosts(currentPage),
         {
             staleTime: 2000,
+            // keepPreviousData set to true, will stop the "Loading..." text from showing when switching pages, it will keep the last page's data
+            // on the screen until the next page's data is ready and then swop it out.
+            keepPreviousData: true,
         }
     );
 
